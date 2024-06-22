@@ -39,7 +39,7 @@ export const workflowSlice = createAppSlice({
         participant,
       }: {
         reference_number: string;
-        participant: { to: string; message: string };
+        participant: { to: Array<string>; message: string };
       }) => {
         const response = await share_letter(reference_number, participant);
         const data = await response;

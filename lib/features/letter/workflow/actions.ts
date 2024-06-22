@@ -5,7 +5,7 @@ import { handleAxiosError } from "@/utils";
 
 export async function share_letter(
   reference_number: string,
-  participant: { to: string; message: string }
+  participant: { to: Array<string>; message: string }
 ) {
   try {
     const response = await axiosInstance.post(
