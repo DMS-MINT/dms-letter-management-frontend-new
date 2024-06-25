@@ -2,25 +2,17 @@
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import {
   selectLetterDetails,
-  updateContent,
   updateSubject,
 } from "@/lib/features/letter/letterSlice";
-import { contactToOption } from "@/utils";
-import {
-  ContactType,
-  IOption,
-  IParticipantInputSerializer,
-} from "@/typing/interface";
+import { ContactType } from "@/typing/interface";
 import { ParticipantRolesEnum } from "@/typing/enum";
 import { selectContacts } from "@/lib/features/contact/contactSlice";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { v4 as uuidv4 } from "uuid";
 import { RichTextEditor } from "@/components/shared/Editor";
 import SignatureDraw from "../signaturepad/signatureDraw";
 import { SelectableInput } from "@/components/shared";

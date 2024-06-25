@@ -15,10 +15,6 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-type Props = {
-  editor: Editor | null;
-};
-
 type EditorTool = {
   value: string;
   action: React.MouseEventHandler<HTMLButtonElement>;
@@ -26,11 +22,7 @@ type EditorTool = {
   isActive: boolean;
 };
 
-export default function Toolbar({ editor }: Props) {
-  if (!editor) {
-    return null;
-  }
-
+export default function Toolbar({ editor }: { editor: Editor }) {
   const editorTools: EditorTool[] = [
     {
       value: "undo",

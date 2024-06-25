@@ -55,7 +55,6 @@ export const letterSlice = createAppSlice({
     setLetterType: create.reducer(
       (state, action: PayloadAction<LetterType>) => {
         state.letterDetails.letter_type = action.payload;
-        console.log(action.payload);
       }
     ),
     addParticipant: create.reducer(
@@ -78,7 +77,7 @@ export const letterSlice = createAppSlice({
               state.letterDetails.participants.filter(
                 (participant) =>
                   participant.user.user_type !== "guest" ||
-                  participant.user.name !== action.payload
+                  participant.user.id !== action.payload
               );
           }
         });
@@ -100,7 +99,7 @@ export const letterSlice = createAppSlice({
           state,
           action: PayloadAction<ILetterListInputSerializer[]>
         ) => {
-          state.status = RequestStatusEnum.IDLE;
+          state.status = RequestStatusEnum.FULFILLED;
           state.error = null;
           state.letters = action.payload;
           toast.dismiss();
@@ -130,7 +129,7 @@ export const letterSlice = createAppSlice({
           toast.loading("Fetching letter details, Please wait...");
         },
         fulfilled: (state, action: PayloadAction<ILetterDetails>) => {
-          state.status = RequestStatusEnum.IDLE;
+          state.status = RequestStatusEnum.FULFILLED;
           state.error = null;
           state.letterDetails = action.payload;
           toast.dismiss();
@@ -224,7 +223,7 @@ export const letterSlice = createAppSlice({
           toast.loading("Updating letter, Please wait...");
         },
         fulfilled: (state, action: PayloadAction<ILetterDetails>) => {
-          state.status = RequestStatusEnum.IDLE;
+          state.status = RequestStatusEnum.FULFILLED;
           state.letterDetails = action.payload;
           state.error = null;
           toast.dismiss();
@@ -252,7 +251,7 @@ export const letterSlice = createAppSlice({
           toast.loading("Deleting letter, Please wait...");
         },
         fulfilled: (state, action: PayloadAction<ILetterDetails>) => {
-          state.status = RequestStatusEnum.IDLE;
+          state.status = RequestStatusEnum.FULFILLED;
           state.letterDetails = action.payload;
           state.error = null;
           toast.dismiss();

@@ -24,6 +24,7 @@ import { createLetterSerializer } from "@/utils";
 import { useEffect, useState } from "react";
 import { RequestStatusEnum } from "@/typing/enum";
 import { redirect } from "next/navigation";
+import { toggleDrawerVisibility } from "@/lib/features/ui/uiManagerSlice";
 interface IContentJson {
   content: string;
 }
@@ -33,6 +34,10 @@ export default function ComposeControlPanel() {
   const status = useAppSelector(selectStatus);
   const dispatch = useAppDispatch();
   const [contentJson, setContentJson] = useState<IContentJson[]>([]);
+
+  useEffect(() => {
+    dispatch(toggleDrawerVisibility(false));
+  }, []);
 
   useEffect(() => {
     setContentJson([
@@ -51,7 +56,10 @@ export default function ComposeControlPanel() {
   };
 
   useEffect(() => {
-    if (status === RequestStatusEnum.FULFILLED) {
+    if (
+      status === RequestStatusEnum.FULFILLED &&
+      letterDetail.reference_number
+    ) {
       const category =
         letterDetail.current_state === "Draft" ? "draft" : "outbox";
       redirect(`/letters/${category}/${letterDetail.reference_number}`);
@@ -94,7 +102,7 @@ export default function ComposeControlPanel() {
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="default">ላክ</Button>
+            <Button variant="default">ወደ መዝገብ ቢሮ አስተላልፍ</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>

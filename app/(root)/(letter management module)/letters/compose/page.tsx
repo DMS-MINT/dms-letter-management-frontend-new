@@ -11,6 +11,10 @@ import { LetterType } from "@/typing/interface";
 import { letterTypeLookup } from "@/typing/dictionary";
 import { useEffect, useState } from "react";
 import { selectMe } from "@/lib/features/authentication/authSlice";
+import {
+  selectIsReadonly,
+  toggleIsReadOnly,
+} from "@/lib/features/ui/uiManagerSlice";
 
 interface ITabs {
   label: LetterType;
@@ -20,7 +24,14 @@ interface ITabs {
 export default function Compose() {
   const me = useAppSelector(selectMe);
   const [tabs, setTabs] = useState<ITabs[]>([]);
+  const isReadonly = useAppSelector(selectIsReadonly);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (isReadonly) {
+      dispatch(toggleIsReadOnly(false));
+    }
+  }, [isReadonly]);
 
   useEffect(() => {
     setTabs([

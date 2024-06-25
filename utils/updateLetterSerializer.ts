@@ -1,22 +1,25 @@
 import { ParticipantRolesEnum } from "@/typing/enum";
 import {
-  ILetterDetailInputSerializer,
+  ILetterDetails,
   ILetterUpdateSerializer,
+  IParticipantOutputSerializer,
 } from "@/typing/interface";
 
 const updateLetterSerializer = (
-  letter: ILetterDetailInputSerializer
+  letterDetails: ILetterDetails
 ): ILetterUpdateSerializer => {
-  const participants = letter.participants.map((participant) => ({
-    id: participant.id,
-    user: participant.user,
-    role: ParticipantRolesEnum[
-      participant.role.toUpperCase() as keyof typeof ParticipantRolesEnum
-    ],
-  }));
+  //@ts-ignore
+  const participants: IParticipantOutputSerializer[] =
+    letterDetails.participants.map((participant) => ({
+      id: participant.id,
+      user: participant.user,
+      role: ParticipantRolesEnum[
+        participant.role.toUpperCase() as keyof typeof ParticipantRolesEnum
+      ],
+    }));
 
-  const subject = letter.subject ? letter.subject : undefined;
-  const content = letter.content ? letter.content : undefined;
+  const subject = letterDetails.subject ? letterDetails.subject : undefined;
+  const content = letterDetails.content ? letterDetails.content : undefined;
 
   return {
     ...(subject && { subject }),

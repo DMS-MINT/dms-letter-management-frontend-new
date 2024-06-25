@@ -93,12 +93,12 @@ export default function TopBar() {
           </Button>
           <Separator orientation="vertical" className="h-8" />
 
-          <p className="text-xs">{me.full_name}</p>
+          <p className="text-xs">{me?.full_name ? me.full_name : ""}</p>
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Avatar>
                 <AvatarFallback>
-                  {me.full_name ? me.full_name.substring(0, 2) : ""}
+                  {me?.full_name ? me.full_name.substring(0, 2) : ""}
                 </AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>

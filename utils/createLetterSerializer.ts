@@ -21,6 +21,7 @@ const createLetterSerializer = (
       } else if (participant.user.user_type === "guest") {
         return {
           user: {
+            id: participant.user.name,
             name: participant.user.name,
             user_type: "guest",
           },

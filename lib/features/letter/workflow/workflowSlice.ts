@@ -2,10 +2,11 @@ import { createAppSlice } from "@/lib/createAppSlice";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "sonner";
 import { RequestStatusEnum } from "@/typing/enum";
-import { IPermissions } from "@/typing/interface";
+import { IPermissions, IShareLetterFormData } from "@/typing/interface";
 import {
   close_letter,
   publish_letter,
+  reopen_letter,
   retract_letter,
   share_letter,
   submit_letter,
@@ -44,8 +45,6 @@ export const workflowSlice = createAppSlice({
         can_reopen_letter: false,
       };
 
-      console.log(action.payload);
-
       action.payload.forEach((permission) => {
         if (permission in permissions) {
           permissions[permission as keyof IPermissions] = true;
@@ -56,12 +55,12 @@ export const workflowSlice = createAppSlice({
     shareLetter: create.asyncThunk(
       async ({
         reference_number,
-        participant,
+        participants,
       }: {
         reference_number: string;
-        participant: { to: string; message: string };
+        participants: IShareLetterFormData;
       }) => {
-        const response = await share_letter(reference_number, participant);
+        const response = await share_letter(reference_number, participants);
         const data = await response;
         return data;
       },
@@ -151,7 +150,7 @@ export const workflowSlice = createAppSlice({
           state.status = RequestStatusEnum.LOADING;
           state.error = null;
           toast.dismiss();
-          toast.loading("Retract letter, Please wait...");
+          toast.loading("Retracting letter, Please wait...");
         },
         fulfilled: (state, action: PayloadAction<string>) => {
           state.status = RequestStatusEnum.IDLE;
@@ -178,7 +177,7 @@ export const workflowSlice = createAppSlice({
           state.status = RequestStatusEnum.LOADING;
           state.error = null;
           toast.dismiss();
-          toast.loading("Close letter, Please wait...");
+          toast.loading("Closing letter, Please wait...");
         },
         fulfilled: (state, action: PayloadAction<string>) => {
           state.status = RequestStatusEnum.IDLE;
@@ -191,6 +190,33 @@ export const workflowSlice = createAppSlice({
           state.error = action.error.message || "Failed to close letter";
           toast.dismiss();
           toast.error(action.error.message || "Failed to close letter");
+        },
+      }
+    ),
+    reopenLetter: create.asyncThunk(
+      async (reference_number: string) => {
+        const response = await reopen_letter(reference_number);
+        const data = await response;
+        return data;
+      },
+      {
+        pending: (state) => {
+          state.status = RequestStatusEnum.LOADING;
+          state.error = null;
+          toast.dismiss();
+          toast.loading("Reopening letter, Please wait...");
+        },
+        fulfilled: (state, action: PayloadAction<string>) => {
+          state.status = RequestStatusEnum.IDLE;
+          state.error = null;
+          toast.dismiss();
+          toast.success(action.payload);
+        },
+        rejected: (state, action) => {
+          state.status = RequestStatusEnum.FAILED;
+          state.error = action.error.message || "Failed to reopen letter";
+          toast.dismiss();
+          toast.error(action.error.message || "Failed to reopen letter");
         },
       }
     ),
@@ -210,6 +236,7 @@ export const {
   publishLetter,
   retractLetter,
   closeLetter,
+  reopenLetter,
 } = workflowSlice.actions;
 export const { selectPermissions, selectStatus, selectError } =
   workflowSlice.selectors;

@@ -2,40 +2,25 @@
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import {
   getLetterDetails,
   selectLetterDetails,
-  updateContent,
+  selectStatus,
   updateSubject,
 } from "@/lib/features/letter/letterSlice";
-import { contactToOption, getDefaultValue } from "@/utils";
-import {
-  ContactType,
-  IOption,
-  IParticipantInputSerializer,
-} from "@/typing/interface";
-import { ParticipantRolesEnum } from "@/typing/enum";
+import { getDefaultValue } from "@/utils";
+import { ContactType } from "@/typing/interface";
+import { ParticipantRolesEnum, RequestStatusEnum } from "@/typing/enum";
 import { selectContacts } from "@/lib/features/contact/contactSlice";
 import { LetterDetailSkeleton, SelectableInput } from "@/components/shared";
 import { useParams } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
-import { selectPermissions } from "@/lib/features/letter/workflow/workflowSlice";
 import { RichTextEditor } from "@/components/shared/Editor";
-
-interface IParticipantState {
-  role: ParticipantRolesEnum;
-  user: IOption;
-}
-
-interface ILetterParticipantOption {
-  label: string;
-  role: ParticipantRolesEnum;
-  isCreatable: boolean;
-  isMulti: boolean;
-}
+import {
+  selectIsReadonly,
+  toggleDrawerVisibility,
+} from "@/lib/features/ui/uiManagerSlice";
 
 interface IFormConfig {
   label: string;
@@ -46,32 +31,6 @@ interface IFormConfig {
   defaultValue?: ContactType[];
 }
 
-// const letterParticipantOptions: ILetterParticipantOption[] = [
-//   {
-//     label: "ከ",
-//     role: ParticipantRolesEnum.AUTHOR,
-//     isCreatable: false,
-//     isMulti: true,
-//   },
-//   {
-//     label: "ለ",
-//     role: ParticipantRolesEnum["PRIMARY RECIPIENT"],
-//     isCreatable: false,
-//     isMulti: true,
-//   },
-//   {
-//     label: "ግልባጭ",
-//     role: ParticipantRolesEnum["CARBON COPY RECIPIENT"],
-//     isCreatable: false,
-//     isMulti: true,
-//   },
-//   {
-//     label: "እንዲያዉቁት",
-//     role: ParticipantRolesEnum["BLIND CARBON COPY RECIPIENT"],
-//     isCreatable: false,
-//     isMulti: true,
-//   },
-// ];
 const internalLetterFormConfig: IFormConfig[] = [
   {
     label: "ከ",
@@ -168,10 +127,19 @@ const outgoingLetterFormConfig: IFormConfig[] = [
 export default function LetterDetail() {
   const dispatch = useAppDispatch();
   const letterDetails = useAppSelector(selectLetterDetails);
-  const permissions = useAppSelector(selectPermissions);
+  const status = useAppSelector(selectStatus);
+  const isReadonly = useAppSelector(selectIsReadonly);
   const contacts = useAppSelector(selectContacts);
   const [formConfig, setFormConfig] = useState<IFormConfig[]>([]);
   const params = useParams();
+
+  useEffect(() => {
+    dispatch(toggleDrawerVisibility(true));
+    // if (status === RequestStatusEnum.FULFILLED) {
+    // } else {
+    //   dispatch(toggleDrawerVisibility(false));
+    // }
+  }, []);
 
   useEffect(() => {
     if (params.referenceNumber) {
@@ -193,14 +161,9 @@ export default function LetterDetail() {
     }
   }, [letterDetails.letter_type]);
 
-  if (
-    Object.keys(permissions).length === 0 ||
-    !(letterDetails?.participants?.length > 0)
-  ) {
-    return <LetterDetailSkeleton />;
-  }
-
-  return (
+  return status === RequestStatusEnum.LOADING ? (
+    <LetterDetailSkeleton />
+  ) : status === RequestStatusEnum.FULFILLED ? (
     <section className="grid gap-5 h-fit pb-5 flex-1">
       <section className="card">
         <h2 className="font-semibold text-lg">የ ደብዳቤው ተሳታፊወች</h2>
@@ -228,6 +191,7 @@ export default function LetterDetail() {
               <div className="grid items-center gap-1.5">
                 <Label htmlFor="ጉዳዩ">ጉዳዩ</Label>
                 <Input
+                  readOnly={isReadonly}
                   type="text"
                   id="ጉዳዩ"
                   value={letterDetails.subject ? letterDetails.subject : ""}
@@ -255,5 +219,5 @@ export default function LetterDetail() {
         </section>
       </section>
     </section>
-  );
+  ) : null;
 }

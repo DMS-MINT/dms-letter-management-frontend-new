@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnHeader } from "@/components/shared/tableComponents";
 import { Circle } from "lucide-react";
-import { letterTableColumnLookup } from "@/typing/dictionary";
+import { letterTableColumnLookup, letterTypeLookup } from "@/typing/dictionary";
 import { LetterTableColumnEnum, ParticipantRolesEnum } from "@/typing/enum";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -106,6 +106,13 @@ export const draftTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
       />
     ),
     size: 10,
+    cell: ({ row }) => {
+      const letter_type: string = row.getValue(
+        LetterTableColumnEnum.LETTER_TYPE
+      );
+
+      return <p>{letterTypeLookup[letter_type.toUpperCase()]}</p>;
+    },
   },
   {
     accessorKey: LetterTableColumnEnum.CURRENT_STATE,

@@ -1,7 +1,3 @@
-// Contact Utils
-export { default as contactToOption } from "./contactToOption";
-export { default as optionToContact } from "./optionToContact";
-
 // Serializers
 export { default as updateLetterSerializer } from "./updateLetterSerializer";
 export { default as createLetterSerializer } from "./createLetterSerializer";

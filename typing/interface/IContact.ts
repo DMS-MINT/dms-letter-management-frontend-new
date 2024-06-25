@@ -16,6 +16,7 @@ export interface IMemberCreateSerializer {
   user_type: "member";
 }
 export interface IGuestCreateSerializer {
+  id: string;
   name: string;
   user_type: "guest";
 }

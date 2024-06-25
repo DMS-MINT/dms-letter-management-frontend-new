@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnHeader } from "@/components/shared/tableComponents";
 import { Circle } from "lucide-react";
-import { letterTableColumnLookup } from "@/typing/dictionary";
+import { letterTableColumnLookup, letterTypeLookup } from "@/typing/dictionary";
 import { LetterTableColumnEnum, ParticipantRolesEnum } from "@/typing/enum";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -14,7 +14,7 @@ import {
 import { format } from "date-fns";
 import { getParticipantInfo, getTranslatedLetterStatus } from "@/utils";
 
-const DateFormat: string = "eee MMM dd";
+const DateFormat: string = "eee MMM dd yyy";
 
 export const inboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
   {
@@ -105,6 +105,13 @@ export const inboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
       />
     ),
     size: 10,
+    cell: ({ row }) => {
+      const letter_type: string = row.getValue(
+        LetterTableColumnEnum.LETTER_TYPE
+      );
+
+      return <p>{letterTypeLookup[letter_type.toUpperCase()]}</p>;
+    },
   },
   {
     accessorKey: LetterTableColumnEnum.CURRENT_STATE,
@@ -132,26 +139,6 @@ export const inboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
     size: 80,
   },
   {
-    accessorKey: LetterTableColumnEnum.SENT_AT,
-    header: ({ column }) => (
-      <ColumnHeader
-        column={column}
-        title={letterTableColumnLookup[LetterTableColumnEnum.SENT_AT]}
-        className="w-fit ml-auto"
-      />
-    ),
-
-    cell: ({ row }) => {
-      const sent_at: string = row.getValue(LetterTableColumnEnum.SENT_AT);
-      return (
-        <div className="text-right font-medium px-4 py-1">
-          {sent_at ? format(new Date(sent_at), DateFormat) : ""}
-        </div>
-      );
-    },
-    size: 50,
-  },
-  {
     accessorKey: LetterTableColumnEnum.RECEIVED_AT,
     header: ({ column }) => (
       <ColumnHeader
@@ -163,7 +150,7 @@ export const inboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
 
     cell: ({ row }) => {
       const received_at: string = row.getValue(
-        LetterTableColumnEnum.RECEIVED_AT
+        LetterTableColumnEnum.PUBLISHED_AT
       );
       return (
         <div className="text-right font-medium px-4 py-1">

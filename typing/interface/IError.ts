@@ -1,4 +1,4 @@
 export interface IServerErrorResponse {
   message: string;
-  extra: {};
+  extra: { fields?: any };
 }

@@ -9,6 +9,7 @@ import {
 import {
   closeLetter,
   publishLetter,
+  reopenLetter,
   retractLetter,
   selectPermissions,
   submitLetter,
@@ -73,14 +74,13 @@ export default function ActionButtons() {
         {
           isVisible: permissions.can_update_letter,
           isButton: true,
-          label: "አርም",
+          label: "ለውጦቹን አስቀምጥ",
           variant: "outline",
           style: "",
           size: "default",
           action: () => {
             const serializedLetter = updateLetterSerializer(letterDetails);
-
-            console.log(serializedLetter);
+            console.table(letterDetails.participants);
 
             dispatch(
               updateLetter({
@@ -93,18 +93,27 @@ export default function ActionButtons() {
         {
           isVisible: permissions.can_submit_letter,
           isButton: true,
-          label: "ደብዳቤውን ላክ",
+          label: "ወደ መዝገብ ቢሮ አስተላልፍ",
           variant: "default",
           style: "",
           size: "default",
           action: () => {
+            const serializedLetter = updateLetterSerializer(letterDetails);
+
+            dispatch(
+              updateLetter({
+                reference_number: letterDetails.reference_number,
+                letter: serializedLetter,
+              })
+            );
+
             dispatch(submitLetter(letterDetails.reference_number));
           },
         },
         {
           isVisible: permissions.can_retract_letter,
           isButton: true,
-          label: "ሰርዝ",
+          label: "ለክለሳ መልስ",
           variant: "destructive",
           style: "",
           size: "default",
@@ -115,7 +124,7 @@ export default function ActionButtons() {
         {
           isVisible: permissions.can_reject_letter,
           isButton: true,
-          label: "ደብዳቤ አትቀበል",
+          label: "ደብዳቤውን አትቀበል",
           variant: "destructive",
           style: "",
           size: "default",
@@ -126,7 +135,7 @@ export default function ActionButtons() {
         {
           isVisible: permissions.can_publish_letter,
           isButton: true,
-          label: "ደብዳቤ ያትሙ",
+          label: "ደብዳቤውን አከፋፍል",
           variant: "third",
           style: "",
           size: "default",
@@ -137,12 +146,23 @@ export default function ActionButtons() {
         {
           isVisible: permissions.can_close_letter,
           isButton: true,
-          label: "ደብዳቤውን ዝጋ",
-          variant: "default",
+          label: "የደብዳቤውን የስራ ሂደት አጠናቅ",
+          variant: "third",
           style: "",
           size: "default",
           action: () => {
             dispatch(closeLetter(letterDetails.reference_number));
+          },
+        },
+        {
+          isVisible: permissions.can_reopen_letter,
+          isButton: true,
+          label: "የደብዳቤውን የስራ ሂደት እንደገና ክፈት",
+          variant: "default",
+          style: "",
+          size: "default",
+          action: () => {
+            dispatch(reopenLetter(letterDetails.reference_number));
           },
         },
       ];

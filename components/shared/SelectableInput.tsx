@@ -1,15 +1,19 @@
 "use client";
+
 import {
   addParticipant,
   removeParticipant,
+  selectLetterDetails,
 } from "@/lib/features/letter/letterSlice";
-import { useAppDispatch } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { ContactType } from "@/typing/interface";
 import { ParticipantRolesEnum } from "@/typing/enum";
 import { useEffect, useState } from "react";
 import Select, { ActionMeta } from "react-select";
 import Creatable from "react-select/creatable";
 import { v4 as uuidv4 } from "uuid";
+import { selectIsReadonly } from "@/lib/features/ui/uiManagerSlice";
+import LetterDetail from "@/app/(root)/(letter management module)/letters/[category]/[referenceNumber]/page";
 
 interface ISelectableInputProps {
   options: ContactType[];
@@ -25,6 +29,8 @@ export default function SelectableInput({
   isMulti,
   ...rest
 }: ISelectableInputProps) {
+  const isReadonly = useAppSelector(selectIsReadonly);
+  const letterDetails = useAppSelector(selectLetterDetails);
   const dispatch = useAppDispatch();
   const [isMounted, setIsMounted] = useState(false);
 
@@ -36,18 +42,22 @@ export default function SelectableInput({
     option: ContactType | null,
     actionMeta: ActionMeta<ContactType>
   ) => {
-    const { action, name, removedValues } = actionMeta;
+    const { action, name } = actionMeta;
     const role = name as ParticipantRolesEnum;
 
-    const handleSelectOption = (option: ContactType) => {
-      dispatch(addParticipant({ id: uuidv4(), user: option, role }));
+    const handleClear = () => {
+      const participants_to_remove = letterDetails.participants.filter(
+        (participant) => participant.role === role
+      );
+
+      participants_to_remove.forEach((participant) => {
+        dispatch(removeParticipant(participant.user.id));
+      });
     };
 
-    const handleClear = (removedValues: ContactType[]) => {
-      removedValues.forEach((removedValue) => {
-        const user_id = removedValue.id;
-        dispatch(removeParticipant(user_id));
-      });
+    const handleSelectOption = (option: ContactType) => {
+      handleClear();
+      dispatch(addParticipant({ id: uuidv4(), user: option, role }));
     };
 
     switch (action) {
@@ -55,7 +65,7 @@ export default function SelectableInput({
         if (option) handleSelectOption(option);
         break;
       case "clear":
-        if (removedValues) handleClear(removedValues as ContactType[]);
+        handleClear();
         break;
       default:
         break;
@@ -84,8 +94,8 @@ export default function SelectableInput({
       const user_type = "guest";
       dispatch(
         addParticipant({
-          id: "__New__",
-          user: { id: "__New__", name: value, user_type },
+          id: uuidv4(),
+          user: { id: value, name: value, user_type },
           role,
         })
       );
@@ -169,6 +179,7 @@ export default function SelectableInput({
 
   return isMulti ? (
     <SelectableInputToRender
+      isDisabled={isReadonly}
       isMulti={true}
       isClearable={true}
       {...rest}
@@ -179,6 +190,7 @@ export default function SelectableInput({
     />
   ) : (
     <SelectableInputToRender
+      isDisabled={isReadonly}
       isMulti={false}
       isClearable={true}
       {...rest}

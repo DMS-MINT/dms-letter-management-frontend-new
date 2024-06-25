@@ -1,12 +1,16 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { toggleDrawerVisibility } from "@/lib/features/ui/uiManagerSlice";
-import { useAppDispatch } from "@/lib/hooks";
+import {
+  selectIsDrawerOpen,
+  toggleDrawerVisibility,
+} from "@/lib/features/ui/uiManagerSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { Menu } from "lucide-react";
 
 export default function Subheader({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const isDrawerOpen = useAppSelector(selectIsDrawerOpen);
   const dispatch = useAppDispatch();
 
   return (
@@ -14,7 +18,7 @@ export default function Subheader({
       <Button
         variant="ghost"
         size="icon"
-        onClick={() => dispatch(toggleDrawerVisibility())}
+        onClick={() => dispatch(toggleDrawerVisibility(!isDrawerOpen))}
       >
         <Menu className="w-6 h-6" />
       </Button>
