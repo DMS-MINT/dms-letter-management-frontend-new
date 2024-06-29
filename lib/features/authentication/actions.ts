@@ -73,3 +73,15 @@ export async function get_user() {
     handleAxiosError(error);
   }
 }
+
+export async function get_default_signature(password: string) {
+  try {
+    const response = await axiosInstance.post("auth/retrieve-signature/", {
+      password,
+    });
+    const data = await response.data;
+    return data;
+  } catch (error: any) {
+    handleAxiosError(error);
+  }
+}

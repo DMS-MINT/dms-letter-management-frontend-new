@@ -1,6 +1,7 @@
 // Forms
 export { default as LetterComposeForm } from "./forms/LetterComposeForm";
 export { default as ShareLetterForm } from "./forms/ShareLetterForm";
+export { default as SubmitLetterForm } from "./forms/SubmitLetterForm";
 
 // Panels
 export { default as ComposeControlPanel } from "./panels/ComposeControlPanel";

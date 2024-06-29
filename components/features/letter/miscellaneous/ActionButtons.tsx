@@ -20,7 +20,10 @@ import { letterSerializer } from "@/utils";
 import { Trash } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { ShareLetterForm } from "@/components/features/letter";
+import {
+  ShareLetterForm,
+  SubmitLetterForm,
+} from "@/components/features/letter";
 import { useRouter } from "next/navigation";
 interface IButtonConfig {
   isVisible: boolean;
@@ -87,7 +90,6 @@ export default function ActionButtons() {
               letterDetails,
               attachments
             );
-            console.table(letterDetails.participants);
 
             dispatch(
               updateLetter({
@@ -99,7 +101,8 @@ export default function ActionButtons() {
         },
         {
           isVisible: current_user_permissions.can_submit_letter,
-          isButton: true,
+          isButton: false,
+          component: <SubmitLetterForm />,
           label: "ወደ መዝገብ ቢሮ አስተላልፍ",
           variant: "default",
           style: "",

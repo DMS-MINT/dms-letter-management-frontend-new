@@ -86,6 +86,7 @@ export const letterSlice = createAppSlice({
       }
     ),
     signLetter: create.reducer((state, action: PayloadAction<File>) => {
+      console.log(action.payload);
       state.letterDetails.signature = action.payload;
     }),
     removeSignature: create.reducer((state, _) => {

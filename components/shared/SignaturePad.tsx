@@ -17,7 +17,11 @@ type EditorToolType = {
   action: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-export default function SignaturePad() {
+export default function SignaturePad({
+  handleSignatureChange,
+}: {
+  handleSignatureChange: (file: File) => void;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [eraseMode, setEraseMode] = useState(false);
   const [drawing, setDrawing] = useState(false);
@@ -118,14 +122,21 @@ export default function SignaturePad() {
         label: "ፊርማውን አስቀምጥ",
         action: () => {
           if (canvasRef.current) {
-            canvasRef.current.toBlob((blob) => {
-              if (blob) {
-                const file = new File([blob], "signature.png", {
-                  type: "image/png",
-                });
-                dispatch(signLetter(file));
-              }
-            }, "image/png");
+            new Promise<void>((resolve) => {
+              canvasRef.current!.toBlob((blob) => {
+                if (blob) {
+                  const file = new File([blob], "signature.png", {
+                    type: "image/png",
+                  });
+                  handleSignatureChange(file);
+                  resolve();
+                } else {
+                  resolve();
+                }
+              }, "image/png");
+            }).catch((error) => {
+              console.error("Error processing the canvas blob:", error);
+            });
           }
         },
       },
@@ -135,7 +146,7 @@ export default function SignaturePad() {
   }, [eraseMode]);
 
   return (
-    <section className="flex flex-col border border-t-0 bg-white border-gray-300 w-fit mx-auto">
+    <section className="flex flex-col border bg-white border-gray-300 w-fit mx-auto">
       <div className="flex gap-3 items-center p-2 justify-end">
         {editorTools.map(({ label, icon, action, isDisabled }) => (
           <Button
@@ -153,11 +164,8 @@ export default function SignaturePad() {
       </div>
       <canvas
         ref={canvasRef}
-        width={790}
+        width={670}
         height={200}
-        defaultValue={
-          "http://127.0.0.1:8000/media/letters/signatures/signature.png"
-        }
         onMouseDown={handleCanvasMouseDown}
         onMouseMove={handleCanvasMouseMove}
         onMouseUp={handleCanvasMouseUp}

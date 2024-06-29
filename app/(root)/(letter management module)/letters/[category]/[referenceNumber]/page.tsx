@@ -136,7 +136,7 @@ export default function LetterDetail() {
   const contacts = useAppSelector(selectContacts);
   const [formConfig, setFormConfig] = useState<IFormConfig[]>([]);
   const params = useParams();
-  useWebSocket(params.referenceNumber as string);
+  // useWebSocket(params.referenceNumber as string);
 
   useEffect(() => {
     dispatch(toggleDrawerVisibility(true));
