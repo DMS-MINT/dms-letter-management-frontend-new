@@ -80,7 +80,7 @@ export const publishedTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         ParticipantRolesEnum.AUTHOR,
         participants
       );
-      return <p className="limited-rows">{senders ? senders : ""}</p>;
+      return <p className="limited-table-chars">{senders ? senders : ""}</p>;
     },
   },
   {
@@ -99,7 +99,7 @@ export const publishedTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         ParticipantRolesEnum["PRIMARY RECIPIENT"],
         participants
       );
-      return <p className="limited-rows">{recipients ? recipients : ""}</p>;
+      return <p className="limited-table-chars">{recipients ? recipients : ""}</p>;
     },
   },
   {

@@ -139,3 +139,12 @@ input[type="number"]::-webkit-inner-spin-button {
   display: inline-block;
   box-sizing: border-box;
 }
+
+.limited-table-chars {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 35ch; /* Set the width to accommodate 10 characters */
+  display: inline-block;
+  box-sizing: border-box;
+}

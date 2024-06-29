@@ -65,7 +65,7 @@ export const pendingTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         title={letterTableColumnLookup[LetterTableColumnEnum.REFERENCE_NUMBER]}
       />
     ),
-    size: 50,
+    size: 30,
   },
   {
     accessorKey: LetterTableColumnEnum.SENDER,
@@ -83,9 +83,9 @@ export const pendingTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         ParticipantRolesEnum.AUTHOR,
         participants
       );
-      return <p className="limited-rows">{senders ? senders : ""}</p>;
+      return <p className="limited-table-chars">{senders ? senders : ""}</p>;
     },
-    size: 300,
+    size: 400,
   },
   {
     accessorKey: LetterTableColumnEnum.RECIPIENT,
@@ -103,9 +103,9 @@ export const pendingTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         ParticipantRolesEnum["PRIMARY RECIPIENT"],
         participants
       );
-      return <p className="limited-rows">{recipients ? recipients : ""}</p>;
+      return <p className="limited-table-chars">{recipients ? recipients : ""}</p>;
     },
-    size: 250,
+    size: 400,
   },
   {
     accessorKey: LetterTableColumnEnum.SUBJECT,
