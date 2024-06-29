@@ -13,6 +13,7 @@ import {
 } from "@/typing/interface";
 import { format } from "date-fns";
 import { getParticipantInfo, getTranslatedLetterStatus } from "@/utils";
+import LetterDetail from "@/app/(root)/(letter management module)/letters/[category]/[referenceNumber]/page";
 
 const DateFormat: string = "eee MMM dd";
 
@@ -79,7 +80,7 @@ export const publishedTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         ParticipantRolesEnum.AUTHOR,
         participants
       );
-      return <p>{senders ? senders : ""}</p>;
+      return <p className="limited-rows">{senders ? senders : ""}</p>;
     },
   },
   {
@@ -98,7 +99,7 @@ export const publishedTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         ParticipantRolesEnum["PRIMARY RECIPIENT"],
         participants
       );
-      return <p>{recipients ? recipients : ""}</p>;
+      return <p className="limited-rows">{recipients ? recipients : ""}</p>;
     },
   },
   {
@@ -109,7 +110,14 @@ export const publishedTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         title={letterTableColumnLookup[LetterTableColumnEnum.SUBJECT]}
       />
     ),
+    size: 400,
+    cell: ({ row }) => {
+      const subject: string = row.getValue(LetterTableColumnEnum.SUBJECT);
+
+      return <p className="limited-chars">{subject}</p>;
+    },
   },
+
   {
     accessorKey: LetterTableColumnEnum.LETTER_TYPE,
     header: ({ column }) => (
@@ -124,7 +132,11 @@ export const publishedTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         LetterTableColumnEnum.LETTER_TYPE
       );
 
-      return <p>{letterTypeLookup[letter_type.toUpperCase()]}</p>;
+      return (
+        <p className="limited-rows">
+          {letterTypeLookup[letter_type.toUpperCase()]}
+        </p>
+      );
     },
   },
   {
@@ -144,7 +156,7 @@ export const publishedTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
       return (
         <Badge
           variant="default"
-          className="rounded-md flex items-center justify-between w-fit"
+          className="rounded-md flex items-center justify-between w-fit limited-rows"
         >
           {amharicTranslation}
         </Badge>
@@ -167,7 +179,7 @@ export const publishedTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         LetterTableColumnEnum.SUBMITTED_AT
       );
       return (
-        <div className="text-right font-medium px-4 py-1">
+        <div className="text-right font-medium px-4 py-1 limited-rows">
           {submitted_at ? format(new Date(submitted_at), DateFormat) : ""}
         </div>
       );
@@ -180,7 +192,7 @@ export const publishedTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
       <ColumnHeader
         column={column}
         title={letterTableColumnLookup[LetterTableColumnEnum.PUBLISHED_AT]}
-        className="w-fit ml-auto"
+        className="w-fit ml-auto limited-rows"
       />
     ),
 
@@ -190,7 +202,7 @@ export const publishedTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
       );
 
       return (
-        <div className="text-right font-medium px-4 py-1">
+        <div className="text-right font-medium px-4 py-1 limited-rows">
           {published_at ? format(new Date(published_at), DateFormat) : ""}
         </div>
       );

@@ -64,7 +64,7 @@ export const outboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         title={letterTableColumnLookup[LetterTableColumnEnum.REFERENCE_NUMBER]}
       />
     ),
-    size: 300,
+    size: 250,
   },
   {
     accessorKey: LetterTableColumnEnum.RECIPIENT,
@@ -82,9 +82,9 @@ export const outboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         ParticipantRolesEnum["PRIMARY RECIPIENT"],
         participants
       );
-      return <p>{recipients ? recipients : ""}</p>;
+      return <p className="limited-rows">{recipients ? recipients : ""}</p>;
     },
-    size: 300,
+    size: 500,
   },
   {
     accessorKey: LetterTableColumnEnum.SUBJECT,
@@ -94,8 +94,14 @@ export const outboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         title={letterTableColumnLookup[LetterTableColumnEnum.SUBJECT]}
       />
     ),
-    size: 350,
+    size: 400,
+    cell: ({ row }) => {
+      const subject: string = row.getValue(LetterTableColumnEnum.SUBJECT);
+
+      return <p className="limited-chars">{subject}</p>;
+    },
   },
+
   {
     accessorKey: LetterTableColumnEnum.LETTER_TYPE,
     header: ({ column }) => (
@@ -104,13 +110,17 @@ export const outboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         title={letterTableColumnLookup[LetterTableColumnEnum.LETTER_TYPE]}
       />
     ),
-    size: 10,
+    size: 50,
     cell: ({ row }) => {
       const letter_type: string = row.getValue(
         LetterTableColumnEnum.LETTER_TYPE
       );
 
-      return <p>{letterTypeLookup[letter_type.toUpperCase()]}</p>;
+      return (
+        <p className="limited-rows">
+          {letterTypeLookup[letter_type.toUpperCase()]}
+        </p>
+      );
     },
   },
   {
@@ -130,13 +140,13 @@ export const outboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
       return (
         <Badge
           variant="default"
-          className="rounded-md flex items-center justify-between w-fit"
+          className="rounded-md flex items-center justify-between w-fit limited-rows"
         >
           {amharicTranslation}
         </Badge>
       );
     },
-    size: 80,
+    size: 50,
   },
   {
     accessorKey: LetterTableColumnEnum.SUBMITTED_AT,
@@ -144,7 +154,7 @@ export const outboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
       <ColumnHeader
         column={column}
         title={letterTableColumnLookup[LetterTableColumnEnum.SUBMITTED_AT]}
-        className="w-fit ml-auto"
+        className="w-fit ml-auto limited-rows"
       />
     ),
 
@@ -153,7 +163,7 @@ export const outboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         LetterTableColumnEnum.SUBMITTED_AT
       );
       return (
-        <div className="text-right font-medium px-4 py-1">
+        <div className="text-right font-medium px-4 py-1 limited-rows">
           {submitted_at ? format(new Date(submitted_at), DateFormat) : ""}
         </div>
       );
@@ -166,7 +176,7 @@ export const outboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
       <ColumnHeader
         column={column}
         title={letterTableColumnLookup[LetterTableColumnEnum.PUBLISHED_AT]}
-        className="w-fit ml-auto"
+        className="w-fit ml-auto "
       />
     ),
 
@@ -175,7 +185,7 @@ export const outboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         LetterTableColumnEnum.PUBLISHED_AT
       );
       return (
-        <div className="text-right font-medium px-4 py-1">
+        <div className="text-right font-medium px-4 py-1 limited-rows">
           {published_at ? format(new Date(published_at), DateFormat) : ""}
         </div>
       );

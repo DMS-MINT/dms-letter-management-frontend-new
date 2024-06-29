@@ -44,7 +44,7 @@ export default function DetailControlPanel() {
     <section className="flex items-center justify-between w-full">
       {status === RequestStatusEnum.FULFILLED ? (
         letterDetails.subject ? (
-          <h1 className="page-title">{letterDetails.subject}</h1>
+          <h1 className="page-title limited-chars ">{letterDetails.subject}</h1>
         ) : (
           <h1 className="page-title !text-gray-400">ርዕሰ ጉዳይ የሌለው ደብዳቤ</h1>
         )

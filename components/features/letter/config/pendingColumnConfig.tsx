@@ -83,7 +83,7 @@ export const pendingTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         ParticipantRolesEnum.AUTHOR,
         participants
       );
-      return <p>{senders ? senders : ""}</p>;
+      return <p className="limited-rows">{senders ? senders : ""}</p>;
     },
     size: 300,
   },
@@ -103,9 +103,9 @@ export const pendingTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         ParticipantRolesEnum["PRIMARY RECIPIENT"],
         participants
       );
-      return <p>{recipients ? recipients : ""}</p>;
+      return <p className="limited-rows">{recipients ? recipients : ""}</p>;
     },
-    size: 300,
+    size: 250,
   },
   {
     accessorKey: LetterTableColumnEnum.SUBJECT,
@@ -115,8 +115,14 @@ export const pendingTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         title={letterTableColumnLookup[LetterTableColumnEnum.SUBJECT]}
       />
     ),
-    size: 250,
+    size: 300,
+    cell: ({ row }) => {
+      const subject: string = row.getValue(LetterTableColumnEnum.SUBJECT);
+
+      return <p className="limited-chars">{subject}</p>;
+    },
   },
+
   {
     accessorKey: LetterTableColumnEnum.LETTER_TYPE,
     header: ({ column }) => (
@@ -127,9 +133,15 @@ export const pendingTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
     ),
     size: 10,
     cell: ({ row }) => {
-      const letter_type:string = row.getValue(LetterTableColumnEnum.LETTER_TYPE);
+      const letter_type: string = row.getValue(
+        LetterTableColumnEnum.LETTER_TYPE
+      );
 
-      return <p>{letterTypeLookup[letter_type.toUpperCase()]}</p>;
+      return (
+        <p className="limited-rows">
+          {letterTypeLookup[letter_type.toUpperCase()]}
+        </p>
+      );
     },
   },
   {
@@ -149,13 +161,13 @@ export const pendingTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
       return (
         <Badge
           variant="default"
-          className="rounded-md flex items-center justify-between w-fit"
+          className="rounded-md flex items-center justify-between w-fit limited-rows"
         >
           {amharicTranslation}
         </Badge>
       );
     },
-    size: 80,
+    size: 50,
   },
   {
     accessorKey: LetterTableColumnEnum.SUBMITTED_AT,
@@ -163,7 +175,7 @@ export const pendingTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
       <ColumnHeader
         column={column}
         title={letterTableColumnLookup[LetterTableColumnEnum.SUBMITTED_AT]}
-        className="w-fit ml-auto"
+        className="w-fit ml-auto "
       />
     ),
 
@@ -172,7 +184,7 @@ export const pendingTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         LetterTableColumnEnum.SUBMITTED_AT
       );
       return (
-        <div className="text-right font-medium px-4 py-1">
+        <div className="text-right font-medium px-4 py-1 limited-rows">
           {submitted_at ? format(new Date(submitted_at), DateFormat) : ""}
         </div>
       );

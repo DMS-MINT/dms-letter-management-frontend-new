@@ -118,3 +118,24 @@ input[type="number"]::-webkit-inner-spin-button {
 .editor h6 {
   font-size: 1rem;
 }
+
+.limited-rows {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* Limit text to 2 lines */
+  overflow: hidden; /* Hide overflow text */
+  text-overflow: ellipsis; /* Add ellipsis (...) at the end */
+  line-height: 1.5em; /* Adjust line height */
+  max-height: 3em; /* Ensure the height doesn't exceed two lines */
+  height: 3em; /* Set height to two lines */
+  box-sizing: border-box; /* Include padding and border in the height calculation */
+}
+
+.limited-chars {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 35ch; /* Set the width to accommodate 10 characters */
+  display: inline-block;
+  box-sizing: border-box;
+}

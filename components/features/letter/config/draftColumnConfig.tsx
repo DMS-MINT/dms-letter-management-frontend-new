@@ -83,9 +83,9 @@ export const draftTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         participants
       );
 
-      return <p>{recipients ? recipients : ""}</p>;
+      return <p className="limited-rows">{recipients ? recipients : ""}</p>;
     },
-    size: 400,
+    size: 350,
   },
   {
     accessorKey: LetterTableColumnEnum.SUBJECT,
@@ -95,7 +95,12 @@ export const draftTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         title={letterTableColumnLookup[LetterTableColumnEnum.SUBJECT]}
       />
     ),
-    size: 350,
+    size: 400,
+    cell: ({ row }) => {
+      const subject: string = row.getValue(LetterTableColumnEnum.SUBJECT);
+
+      return <p className="limited-chars">{subject}</p>;
+    },
   },
   {
     accessorKey: LetterTableColumnEnum.LETTER_TYPE,
@@ -105,13 +110,17 @@ export const draftTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         title={letterTableColumnLookup[LetterTableColumnEnum.LETTER_TYPE]}
       />
     ),
-    size: 10,
+    size: 30,
     cell: ({ row }) => {
       const letter_type: string = row.getValue(
         LetterTableColumnEnum.LETTER_TYPE
       );
 
-      return <p>{letterTypeLookup[letter_type.toUpperCase()]}</p>;
+      return (
+        <p className="limited-rows">
+          {letterTypeLookup[letter_type.toUpperCase()]}
+        </p>
+      );
     },
   },
   {
@@ -137,7 +146,7 @@ export const draftTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         </Badge>
       );
     },
-    size: 80,
+    size: 50,
   },
   {
     accessorKey: LetterTableColumnEnum.CREATED_AT,
@@ -145,18 +154,18 @@ export const draftTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
       <ColumnHeader
         column={column}
         title={letterTableColumnLookup[LetterTableColumnEnum.CREATED_AT]}
-        className="w-fit ml-auto"
+        className="w-fit ml-auto limited-rows"
       />
     ),
     cell: ({ row }) => {
       const created_at: string = row.getValue(LetterTableColumnEnum.CREATED_AT);
       return (
-        <div className="text-right font-medium px-4 py-1">
+        <div className="text-right font-medium px-4 py-1 limited-rows">
           {created_at ? format(new Date(created_at), DateFormat) : ""}
         </div>
       );
     },
-    size: 50,
+    size: 30,
   },
   {
     accessorKey: LetterTableColumnEnum.UPDATED_AT,
@@ -164,17 +173,17 @@ export const draftTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
       <ColumnHeader
         column={column}
         title={letterTableColumnLookup[LetterTableColumnEnum.UPDATED_AT]}
-        className="w-fit ml-auto"
+        className="w-fit ml-auto limited-rows"
       />
     ),
     cell: ({ row }) => {
       const updated_at: string = row.getValue(LetterTableColumnEnum.UPDATED_AT);
       return (
-        <div className="text-right font-medium px-4 py-1">
+        <div className="text-right font-medium px-4 py-1 limited-rows">
           {updated_at ? format(new Date(updated_at), DateFormat) : ""}
         </div>
       );
     },
-    size: 50,
+    size: 30,
   },
 ];

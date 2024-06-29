@@ -82,7 +82,7 @@ export const inboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         ParticipantRolesEnum.AUTHOR,
         participants
       );
-      return <p>{senders ? senders : ""}</p>;
+      return <p className="limited-rows">{senders ? senders : ""}</p>;
     },
     size: 450,
   },
@@ -95,7 +95,13 @@ export const inboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
       />
     ),
     size: 400,
+    cell: ({ row }) => {
+      const subject: string = row.getValue(LetterTableColumnEnum.SUBJECT);
+
+      return <p className="limited-chars">{subject}</p>;
+    },
   },
+
   {
     accessorKey: LetterTableColumnEnum.LETTER_TYPE,
     header: ({ column }) => (
@@ -110,7 +116,11 @@ export const inboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         LetterTableColumnEnum.LETTER_TYPE
       );
 
-      return <p>{letterTypeLookup[letter_type.toUpperCase()]}</p>;
+      return (
+        <p className="limited-rows">
+          {letterTypeLookup[letter_type.toUpperCase()]}
+        </p>
+      );
     },
   },
   {
@@ -130,7 +140,7 @@ export const inboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
       return (
         <Badge
           variant="default"
-          className="rounded-md flex items-center justify-between w-fit"
+          className="rounded-md flex items-center justify-between w-fit limited-rows"
         >
           {amharicTranslation}
         </Badge>
@@ -144,7 +154,7 @@ export const inboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
       <ColumnHeader
         column={column}
         title={letterTableColumnLookup[LetterTableColumnEnum.RECEIVED_AT]}
-        className="w-fit ml-auto"
+        className="w-fit ml-auto "
       />
     ),
 
@@ -153,7 +163,7 @@ export const inboxTableColumns: ColumnDef<ILetterListInputSerializer>[] = [
         LetterTableColumnEnum.PUBLISHED_AT
       );
       return (
-        <div className="text-right font-medium px-4 py-1">
+        <div className="text-right font-medium px-4 py-1 limited-rows">
           {received_at ? format(new Date(received_at), DateFormat) : ""}
         </div>
       );
