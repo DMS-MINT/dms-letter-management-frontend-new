@@ -2,15 +2,14 @@ import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import { ParticipantRolesEnum } from "@/typing/enum";
 import { ILetterDetails } from "@/typing/interface";
+import { useAppSelector } from "@/lib/hooks";
+import { selectLetterDetails } from "@/lib/features/letter/letterSlice";
 
-interface PrintTemplateProps {
-  content: ILetterDetails;
-}
-
-const PrintTemplate: React.FC<PrintTemplateProps> = ({ content }) => {
+const HeaderTemplate: React.FC = () => {
+  const letterDetails = useAppSelector(selectLetterDetails);
   return (
     <>
-      {content?.letter_type === "internal" && (
+      {letterDetails?.letter_type === "internal" && (
         <div className="print-template">
           <header className="flex justify-center items-center mb-4">
             <img src="/image/Type=1.svg" alt="Logo 1" className="w-60 h-36" />
@@ -18,15 +17,15 @@ const PrintTemplate: React.FC<PrintTemplateProps> = ({ content }) => {
           <hr className="mb-4 border-b-1 border-black" />
           <div className="flex flex-col">
             <p className="text-sm text-gray-600">ቁጥር</p>
-            <h1>{content.reference_number}</h1>
+            <h1>{letterDetails.reference_number}</h1>
             <p className="text-sm text-gray-600">ቀን</p>
-            <h1>{new Date(content.created_at).toLocaleDateString()}</h1>
+            <h1>{new Date(letterDetails.created_at).toLocaleDateString()}</h1>
           </div>
           <p>From</p>
-          <h1>{content.owner.full_name}</h1>
+          <h1>{letterDetails.owner.full_name}</h1>
           <br />
           <p>ለ</p>
-          {content.participants
+          {letterDetails?.participants
             .filter(
               (participant) =>
                 participant.role === ParticipantRolesEnum["PRIMARY RECIPIENT"]
@@ -40,7 +39,7 @@ const PrintTemplate: React.FC<PrintTemplateProps> = ({ content }) => {
             ))}
           <span>
             <p className="text-lg  text-gray-600 text-center">ጉዳዩ:-</p>
-            <h1>{content.subject}</h1>
+            <h1>{letterDetails.subject}</h1>
           </span>
         </div>
       )}
@@ -48,4 +47,4 @@ const PrintTemplate: React.FC<PrintTemplateProps> = ({ content }) => {
   );
 };
 
-export default PrintTemplate;
+export default HeaderTemplate;
