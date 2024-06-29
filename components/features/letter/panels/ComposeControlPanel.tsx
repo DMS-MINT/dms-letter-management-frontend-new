@@ -3,6 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Printer, Dot } from "lucide-react";
+
 import {
   Dialog,
   DialogContent,
@@ -26,6 +27,10 @@ import { useEffect, useState } from "react";
 import { RequestStatusEnum } from "@/typing/enum";
 import { redirect } from "next/navigation";
 import { toggleDrawerVisibility } from "@/lib/features/ui/uiManagerSlice";
+// Update the import here
+
+import ConfirmSubmmit from "../confirmSubmitDialog/confirmsubmmit";
+
 interface IContentJson {
   content: string;
 }
@@ -101,26 +106,9 @@ export default function ComposeControlPanel() {
         >
           ረቂቁን ያስቀምጡ
         </Button>
-
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="default">ወደ መዝገብ ቢሮ አስተላልፍ</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>ያረጋግጡ</DialogTitle>
-              <DialogDescription>
-                እርግጠኛ ነዎት ደብዳቤውን ወደ ማህደር ቢሮ በቋሚነት ማስገባት ይፈልጋሉ
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <Button type="submit" onClick={dispatchCreateOrSubmitLetter}>
-                አዎ
-              </Button>
-              <Button className="bg-white text-black hover:bg-white">አይ</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        {/* <ConfirmSubmission /> */}
+        {/* <ConfirmSubmissionForm /> */}
+        <ConfirmSubmmit />
       </div>
     </section>
   );

@@ -1,6 +1,6 @@
 // Forms
 export { default as LetterComposeForm } from "./forms/LetterComposeForm";
-export { default as ShareLetterForm } from "./forms/ShareLetterForm";
+export { default as ShareLetterForm } from "./confirmSubmitDialog/confirmsubmmit";
 
 // Panels
 export { default as ComposeControlPanel } from "./panels/ComposeControlPanel";

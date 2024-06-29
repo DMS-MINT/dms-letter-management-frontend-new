@@ -13,6 +13,7 @@ import {
   update_letter,
   delete_letter,
   create_or_submit_letter,
+  get_user_signature,
 } from "./actions";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "sonner";
@@ -23,6 +24,7 @@ export interface ILetterSliceState {
   letters: ILetterListInputSerializer[];
   letterDetails: ILetterDetails;
   attachments: File[];
+  signatureImage: string;
   status: RequestStatusEnum;
   error: string | null;
 }
@@ -34,6 +36,7 @@ const initialState: ILetterSliceState = {
     attachments: [] as IAttachment[],
   } as ILetterDetails,
   attachments: [] as File[],
+  signatureImage: "",
   status: RequestStatusEnum.IDLE,
   error: null,
 };
@@ -277,10 +280,42 @@ export const letterSlice = createAppSlice({
         },
       }
     ),
+    getUserSignature: create.asyncThunk(
+      async (password: string) => {
+        const response = await get_user_signature(password);
+        const data = await response.data;
+        return data;
+      },
+      {
+        pending: (state) => {
+          state.status = RequestStatusEnum.LOADING;
+          state.error = null;
+          toast.dismiss();
+          toast.loading("signing, Please wait...");
+        },
+        fulfilled: (
+          state,
+          action: PayloadAction<{ message: string; signature_image: string }>
+        ) => {
+          state.status = RequestStatusEnum.FULFILLED;
+          state.signatureImage = action.payload.signature_image;
+          state.error = null;
+          toast.dismiss();
+          toast.success(action.payload.message);
+        },
+        rejected: (state, action) => {
+          state.status = RequestStatusEnum.FAILED;
+          state.error = action.error.message || "Failed to sign letter";
+          toast.dismiss();
+          toast.error(action.error.message || "Failed to sign letter");
+        },
+      }
+    ),
   }),
 
   selectors: {
     selectLetters: (letter) => letter.letters,
+    selectSignatureImage: (letter) => letter.signatureImage,
     selectLetterDetails: (letter) => letter.letterDetails,
     selectStatus: (letter) => letter.status,
     selectError: (letter) => letter.error,
@@ -302,12 +337,14 @@ export const {
   getLetterDetails,
   createLetter,
   createOrSubmitLetter,
+  getUserSignature,
   updateLetter,
   deleteLetter,
 } = letterSlice.actions;
 export const {
   selectLetters,
   selectLetterDetails,
+  selectSignatureImage,
   selectAttachments,
   selectStatus,
   selectError,

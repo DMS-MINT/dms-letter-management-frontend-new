@@ -90,3 +90,17 @@ export async function delete_letter(reference_number: string) {
     handleAxiosError(error);
   }
 }
+export async function get_user_signature(password: string) {
+  console.log("Password received:", password);
+
+  try {
+    // Log the password to check if it's received correctly
+
+    const response = await axiosInstance.post("auth/retrieve-signature/");
+    const data = await response.data;
+    return data;
+  } catch (error: any) {
+    handleAxiosError(error);
+    throw error; // Ensure to re-throw the error to propagate it
+  }
+}

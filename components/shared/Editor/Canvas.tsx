@@ -20,7 +20,6 @@ export default function Canvas({ editor }: { editor: Editor }) {
           className="bg-white mx-auto absolute w-80 bottom-1 right-1"
         />
       </div>
-      <SignaturePad />
     </section>
   );
 }

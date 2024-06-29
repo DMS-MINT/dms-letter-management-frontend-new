@@ -153,7 +153,7 @@ export default function SignaturePad() {
       </div>
       <canvas
         ref={canvasRef}
-        width={790}
+        width={480}
         height={200}
         defaultValue={
           "http://127.0.0.1:8000/media/letters/signatures/signature.png"
