@@ -18,17 +18,17 @@ const useWebSocket = (referenceNumber: string): UseWebSocketReturn => {
   const dispatch = useAppDispatch();
   const reconnectAttempts = useRef<number>(0);
   const maxReconnectAttempts = 5;
-  const reconnectInterval = 3000; // 3 seconds
+  const reconnectInterval = 3000;
 
   const connectWebSocket = () => {
     ws.current = new WebSocket(
-      `ws://127.0.0.1:8000/ws/letters/${referenceNumber}/`
+      `ws://${process.env.NEXT_PUBLIC_IP_ADDRESS}/ws/letters/${referenceNumber}/`
     );
 
     ws.current.onopen = () => {
       console.log("WebSocket connection opened");
       setIsOpen(true);
-      reconnectAttempts.current = 0; // Reset reconnect attempts on successful connection
+      reconnectAttempts.current = 0;
     };
 
     ws.current.onmessage = (event: MessageEvent) => {
@@ -51,7 +51,7 @@ const useWebSocket = (referenceNumber: string): UseWebSocketReturn => {
 
     ws.current.onerror = (error: Event) => {
       console.error("WebSocket error:", error);
-      ws.current?.close(); // Close the connection on error to trigger reconnection
+      ws.current?.close();
     };
   };
 
