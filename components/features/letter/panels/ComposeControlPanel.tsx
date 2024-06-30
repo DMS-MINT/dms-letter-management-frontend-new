@@ -12,7 +12,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import {
   createLetter,
   createOrSubmitLetter,
@@ -26,6 +25,12 @@ import { useEffect, useState } from "react";
 import { RequestStatusEnum } from "@/typing/enum";
 import { redirect } from "next/navigation";
 import { toggleDrawerVisibility } from "@/lib/features/ui/uiManagerSlice";
+import HeaderTemplate from "./HeaderTemplate";
+import FooterTemplate from "./FooterTemplate";
+import { renderToString } from "react-dom/server";
+import HeaderOutgoingTemplate from "./HeaderOutgoingTemplate";
+import FooterOutgoingTemplate from "./FooterOutgoingTemplate";
+
 interface IContentJson {
   content: string;
 }
@@ -39,7 +44,7 @@ export default function ComposeControlPanel() {
 
   useEffect(() => {
     dispatch(toggleDrawerVisibility(false));
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     setContentJson([
@@ -66,19 +71,76 @@ export default function ComposeControlPanel() {
         letterDetail.current_state === "Draft" ? "draft" : "outbox";
       redirect(`/letters/${category}/${letterDetail.reference_number}`);
     }
-  }, [status]);
+  }, [status, letterDetail]);
 
   const handlePrint = async () => {
     if (typeof window !== "undefined") {
       const printJS = (await import("print-js")).default;
+      let header;
+      let footer;
+      if (letterDetail?.letter_type === "internal") {
+        header = renderToString(
+          <HeaderTemplate letterDetails={letterDetail} />
+        );
+        footer = renderToString(
+          <FooterTemplate letterDetails={letterDetail} />
+        );
+      } else {
+        header = renderToString(
+          <HeaderOutgoingTemplate letterDetails={letterDetail} />
+        );
+        footer = renderToString(
+          <FooterOutgoingTemplate letterDetails={letterDetail} />
+        );
+      }
+
+      const content = contentJson.map((item) => item.content).join("");
+
+      const printableContent = `
+        <html>
+          <head>
+            <style>
+              @page {
+                size: auto;
+                margin: 20mm 5mm; 
+              }
+              body {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+              }
+              .header, .footer {
+                width: 100%;
+                
+              }
+              .content {
+                margin-left: 15mm;
+                margin-right: 15mm;
+                padding: 0.5rem;
+                padding-top: 1rem;
+                padding-bottom: 0;
+              }
+              p {
+                margin: 0.5rem;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="header">${header}</div>
+            <div class="content">${content}</div>
+            <div class="footer">${footer}</div>
+          </body>
+        </html>
+      `;
       printJS({
-        printable: contentJson,
-        properties: ["content"],
-        type: "json",
+        printable: printableContent,
+        type: "raw-html",
+        scanStyles: false,
+        documentTitle: `${letterDetail.subject}`,
       });
     }
   };
-
+  // page-break-inside: avoid;
   return (
     <section className="flex items-center justify-between w-full">
       <div className="flex gap-2">
@@ -95,7 +157,7 @@ export default function ComposeControlPanel() {
           <Printer size={20} />
         </Button>
         <Button
-          className="mr-0 RECIPIENTborder-gray-300 rounded-md"
+          className="mr-0 border-gray-300 rounded-md"
           variant="outline"
           onClick={dispatchCreateLetter}
         >

@@ -17,6 +17,8 @@ import { useEffect, useState } from "react";
 import { RequestStatusEnum } from "@/typing/enum";
 import HeaderTemplate from "./HeaderTemplate";
 import FooterTemplate from "./FooterTemplate";
+import HeaderOutgoingTemplate from "./HeaderOutgoingTemplate";
+import FooterOutgoingTemplate from "./FooterOutgoingTemplate";
 import { renderToString } from "react-dom/server";
 
 interface IContentJson {
@@ -37,19 +39,71 @@ export default function DetailControlPanel() {
   const handlePrint = async () => {
     if (typeof window !== "undefined") {
       const printJS = (await import("print-js")).default;
-      const header = renderToString(<HeaderTemplate />);
-      const footer = renderToString(<FooterTemplate />);
+      let header;
+      let footer;
+      if (letterDetails?.letter_type === "internal") {
+        header = renderToString(
+          <HeaderTemplate letterDetails={letterDetails} />
+        );
+        footer = renderToString(
+          <FooterTemplate letterDetails={letterDetails} />
+        );
+      } else {
+        header = renderToString(
+          <HeaderOutgoingTemplate letterDetails={letterDetails} />
+        );
+        footer = renderToString(
+          <FooterOutgoingTemplate letterDetails={letterDetails} />
+        );
+      }
+
       const content = contentJson.map((item) => item.content).join("");
 
-      const printableContent = `${header}${content}${footer}`;
+      const printableContent = `
+        <html>
+          <head>
+            <style>
+              @page {
+                size: auto;
+                margin: 20mm 5mm; 
+              }
+              body {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+              }
+              .header, .footer {
+                width: 100%;
+              }
+              .content {
+                margin-left: 15mm;
+                margin-right: 15mm;
+                padding: 0.5rem;
+                padding-top: 1rem;
+                padding-bottom: 0;
+              }
+                p {
+              margin: 0.5rem;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="header">${header}</div>
+            <div class="content">${content}</div>
+            <div class="footer">${footer}</div>
+          </body>
+        </html>
+      `;
       printJS({
         printable: printableContent,
         type: "raw-html",
         scanStyles: false,
+        documentTitle: `${letterDetails.subject}`,
       });
     }
   };
 
+  // page-break-inside: avoid;
   return (
     <section className="flex items-center justify-between w-full">
       {status === RequestStatusEnum.FULFILLED ? (

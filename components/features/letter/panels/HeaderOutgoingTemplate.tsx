@@ -1,19 +1,27 @@
 import React from "react";
-import { v4 as uuidv4 } from "uuid";
-import { ParticipantRolesEnum } from "@/typing/enum";
 import { ILetterDetails } from "@/typing/interface";
+import { ParticipantRolesEnum } from "@/typing/enum";
+import { v4 as uuidv4 } from "uuid";
 
-interface HeaderTemplateProps {
+interface HeaderOutgoingTemplateProps {
   letterDetails: ILetterDetails;
 }
 
-const HeaderTemplate: React.FC<HeaderTemplateProps> = ({ letterDetails }) => {
+const HeaderOutgoingTemplate: React.FC<HeaderOutgoingTemplateProps> = ({
+  letterDetails,
+}) => {
   return (
     <>
       <style>
         {`
           .print-template {
-            padding-bottom: 0;
+            padding-top: 0.25rem;
+            margin-left: 1rem;
+            margin-top: 1rem;
+            margin-right: 1rem;
+            padding-right: 4rem;
+            padding-left: 4rem;
+            padding-bottom: 0rem;
             font-family: Arial, sans-serif;
           }
           .underline {
@@ -25,6 +33,9 @@ const HeaderTemplate: React.FC<HeaderTemplateProps> = ({ letterDetails }) => {
           }
           .flex {
             display: flex;
+          }
+          .justify-center {
+            justify-content: center;
           }
           .justify-between {
             justify-content: space-between;
@@ -44,23 +55,32 @@ const HeaderTemplate: React.FC<HeaderTemplateProps> = ({ letterDetails }) => {
           .gap-2 {
             gap: 0.5rem;
           }
-          .p-16 {
-            padding: 4rem;
+          .w-4 {
+            width: 4rem;
+          }
+          .h-4 {
+            height: 4rem;
+          }
+          .h-5 {
+            height: 5rem;
+          }
+          .w-5 {
+            width: 5rem;
+          }
+          .w-6 {
+            width: 9rem;
+          }
+          .h-6 {
+            height: 6rem;
           }
           .w-60 {
-            width: 15rem;
+            width: 20rem;
           }
           .h-36 {
             height: 9rem;
           }
           .mb-4 {
             margin-bottom: 1rem;
-          }
-          .border-black {
-            border-color: black;
-          }
-          .border-b-1 {
-            border-bottom-width: 1px;
           }
           .pt-4 {
             padding-top: 1rem;
@@ -101,8 +121,17 @@ const HeaderTemplate: React.FC<HeaderTemplateProps> = ({ letterDetails }) => {
           .rounded-lg {
             border-radius: 0.5rem;
           }
-          .shadow-md {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          .w-[50px] {
+            width: 50px;
+          }
+          .h-[50px] {
+            height: 50px;
+          }
+          .w-[100px] {
+            width: 100px;
+          }
+          .h-[100px] {
+            height: 100px;
           }
           .w-[132px] {
             width: 132px;
@@ -110,30 +139,17 @@ const HeaderTemplate: React.FC<HeaderTemplateProps> = ({ letterDetails }) => {
           .h-[132px] {
             height: 132px;
           }
-          .mr-24 {
-            margin-right: 6rem;
-          }
-          .ml-44 {
-            margin-left: 11rem;
+          .mt-2 {
+            margin-top: 1rem;
           }
           .pl-5 {
-            padding-left: 1rem;
+            padding-left: 2rem;
           }
           .pr-5 {
-            padding-right: 1rem;
+            padding-right: 2rem;
           }
           .pl-1 {
             padding-left: 0.25rem;
-          }
-          .print-template header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 0.5rem;
-          }
-          .print-template hr {
-            margin-bottom: 1rem;
-            border-bottom: 2px solid black;
           }
           .line-height-05 {
             line-height: 0.5cm;
@@ -141,23 +157,51 @@ const HeaderTemplate: React.FC<HeaderTemplateProps> = ({ letterDetails }) => {
           .font-bold {
             font-weight: bold;
           }
+          .z-5 {
+            z-index: 5;
+          }
+          .z-0 {
+            z-index: 0;
+          }
+        
         `}
       </style>
+
       <div className="print-template">
-        <header>
-          <img src="/image/Type=1.svg" alt="Logo 1" className="w-60 h-36" />
+        <header className="flex justify-between items-center mb-4">
+          <img src="/image/star.png" alt="Logo 1" className="w-5 h-5" />
+
+          <div
+            className="items-center w-full font-serif"
+            style={{ lineHeight: "0.75" }}
+          >
+            <h2 className="text-xl font-bold text-gray-800 text-center">
+              በ ኢትዮጲያ ፌደረላዊ ሪፐብሊክ
+            </h2>
+            <h2 className="text-lg font-bold text-gray-800 text-center">
+              የኢኖቬሽንና ቴክኖሎጂ ሚኒስቴር
+            </h2>
+            <p className="text-sm text-gray-600 text-center">
+              The Federal Democratic Republic of Ethiopia
+            </p>
+            <p className="text-sm text-gray-600 text-center">
+              Minister of Innovation and Technology
+            </p>
+          </div>
+
+          <img src="/image/innovation.png" alt="Logo 1" className="w-6 h-6" />
         </header>
-        <hr className="mb-2 border-b-2" />
-        <div className="flex flex-col items-end pt-2 font-serif">
+
+        <hr className="mb-2 border-b-1 border-black" />
+
+        <div className="flex flex-col items-end pt-2 pr-5 font-serif">
           <div className="flex items-center gap-1 font-serif">
             <div className="line-height-05">
               <p className="text-sm">
                 ቁጥር / ref.no:-{" "}
                 <span className="pl-1 underline">
                   {" "}
-                  {letterDetails?.reference_number
-                    ? `${letterDetails?.reference_number}`
-                    : "Draft letter"}
+                  {letterDetails.reference_number}
                 </span>
               </p>
               <p className="text-sm">
@@ -169,7 +213,11 @@ const HeaderTemplate: React.FC<HeaderTemplateProps> = ({ letterDetails }) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col font-serif gap-0">
+
+        <div
+          className="flex flex-col font-serif gap-0 pl-5"
+          style={{ lineHeight: "0.25" }}
+        >
           {letterDetails?.participants
             .filter(
               (participant) =>
@@ -187,12 +235,11 @@ const HeaderTemplate: React.FC<HeaderTemplateProps> = ({ letterDetails }) => {
         </div>
         <div className="flex flex-col pt-2 gap-3 font-serif">
           <p className="text-lg text-center">
-            ጉዳዩ:- <span className="font-bold">{letterDetails?.subject}</span>
+            ጉዳዩ:- <span className="font-bold">{letterDetails.subject}</span>
           </p>
         </div>
       </div>
     </>
   );
 };
-
-export default HeaderTemplate;
+export default HeaderOutgoingTemplate;
